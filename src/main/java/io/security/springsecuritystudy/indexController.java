@@ -1,22 +1,29 @@
 package io.security.springsecuritystudy;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class indexController {
 
+    @Autowired
+    SecurityContextService securityContextService;
+
     @GetMapping("/")
-    public String index(String customParam) {
-        if (customParam != null) {
-            return "customPage";
-        } else {
-            return "index";
-        }
+    public String index() {
+        SecurityContext context = SecurityContextHolder.getContextHolderStrategy().getContext();
+        Authentication authentication = context.getAuthentication();
+        System.out.println("authentication = " + authentication);
+
+        securityContextService.securityContext();
+
+        return "index";
     }
 
     @GetMapping("/loginPage")
