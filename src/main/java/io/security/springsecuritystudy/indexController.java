@@ -1,6 +1,5 @@
 package io.security.springsecuritystudy;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.CurrentSecurityContext;
@@ -12,18 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class indexController {
 
-    @Autowired
-    SecurityContextService securityContextService;
-
     @GetMapping("/")
-    public String index() {
-        SecurityContext context = SecurityContextHolder.getContextHolderStrategy().getContext();
-        Authentication authentication = context.getAuthentication();
-        System.out.println("authentication = " + authentication);
-
-        securityContextService.securityContext();
-
-        return "index";
+    public Authentication index(Authentication authentication) {
+        return authentication;
     }
 
     @GetMapping("/loginPage")
