@@ -2,8 +2,6 @@ package io.security.springsecuritystudy;
 
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -11,7 +9,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import java.util.List;
 
-public class CustomAuthenticationProvider implements AuthenticationProvider {
+public class CustomAuthenticationProvider2 implements AuthenticationProvider {
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -22,8 +20,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         // 아이디 검증
         //비밀번호 검증
 
-        return new UsernamePasswordAuthenticationToken
-                (loginId, password, List.of(new SimpleGrantedAuthority("ROLE_USER")));
+        return new UsernamePasswordAuthenticationToken(loginId, password, List.of(new SimpleGrantedAuthority("ROLE_USER")));
     }
 
     @Override
