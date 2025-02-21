@@ -1,0 +1,16 @@
+GET http://localhost:8080/
+Content-Type: application/json
+
+###
+POST http://localhost:8080/csrf
+Content-Type: application/json
+
+###
+POST http://localhost:8080/csrf
+Content-Type: application/x-www-form-urlencoded
+
+_csrf = C7f4Rpkejn6anWaTEntkbT0Xay1b9qKsmzQBRC3Kilh0gQYaPYTOdfgsvUi3qVWqI1ZQD1wkRkxswJeBqgFiJkj-vTsV4mB7
+
+###
+GET http://localhost:8080/csrfToken
+Content-Type: application/json
