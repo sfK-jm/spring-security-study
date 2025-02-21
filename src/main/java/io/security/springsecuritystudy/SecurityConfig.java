@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.expression.WebExpressionAuthorizationManager;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 @EnableWebSecurity
@@ -19,16 +20,12 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-//        CookieCsrfTokenRepository csrfTokenRepository = new CookieCsrfTokenRepository();
-
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/csrf", "/csrfToken").permitAll()
+                        .requestMatchers("/user/{name}").access(new WebExpressionAuthorizationManager("#name == authentication.name"))
+                        .requestMatchers("/admin/db").access(new WebExpressionAuthorizationManager("hasAuthority('ROLE_DB') or hasAuthority('ROLE_ADMIN')"))
                         .anyRequest().authenticated())
                 .formLogin(Customizer.withDefaults())
-//                .csrf(csrf -> csrf
-//                        // 기본설정은 세션이므로 cookie 방식을 사용하기 위해서는 다음과 같이 설정해야함
-//                        .csrfTokenRepository(csrfTokenRepository))
         ;
 
         return http.build();
@@ -42,6 +39,16 @@ public class SecurityConfig {
                 .roles("USER")
                 .build();
 
-        return new InMemoryUserDetailsManager(user);
+        UserDetails manager = User.withUsername("manager")
+                .password("{noop}1111")
+                .roles("MANAGER")
+                .build();
+
+        UserDetails admin = User.withUsername("admin")
+                .password("{noop}1111")
+                .roles("ADMIN", "WRITE")
+                .build();
+
+        return new InMemoryUserDetailsManager(user, manager, admin);
     }
 }

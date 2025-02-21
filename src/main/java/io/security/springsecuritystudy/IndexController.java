@@ -8,6 +8,7 @@ import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -87,5 +88,15 @@ public class IndexController {
         CsrfToken csrfToken2 = (CsrfToken) request.getAttribute("_csrf");
         String token = csrfToken1.getToken();
         return token;
+    }
+
+    @GetMapping("/user/{name}")
+    public String user(@PathVariable String name) {
+        return name;
+    }
+
+    @GetMapping("/admin/db")
+    public String adminDb() {
+        return "admin db";
     }
 }
