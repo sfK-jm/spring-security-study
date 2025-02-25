@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class IndexController {
 
-
     @GetMapping("/")
     public Authentication index(Authentication authentication) {
         return authentication;
