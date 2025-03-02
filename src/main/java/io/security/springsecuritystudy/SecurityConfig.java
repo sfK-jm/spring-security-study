@@ -2,6 +2,8 @@ package io.security.springsecuritystudy;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -23,13 +25,22 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("user").hasRole("USER")
+                        .requestMatchers("db").hasRole("DB")
+                        .requestMatchers("admin").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .formLogin(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
-
         ;
 
         return http.build();
+    }
+
+    @Bean
+    public RoleHierarchy roleHierarchy() {
+        return RoleHierarchyImpl.fromHierarchy("ROLE_ADMIN > ROLE_DB\n" +
+                "ROLE_DB > ROLE_USER\n" +
+                "ROLE_USER > ROLE_ANONYMOUS");
     }
 
 
@@ -40,7 +51,7 @@ public class SecurityConfig {
                 .roles("USER")
                 .build();
 
-        UserDetails manager = User.withUsername("db")
+        UserDetails db = User.withUsername("db")
                 .password("{noop}1111")
                 .roles("DB")
                 .build();
@@ -50,6 +61,6 @@ public class SecurityConfig {
                 .roles("ADMIN", "SECURE")
                 .build();
 
-        return new InMemoryUserDetailsManager(user, manager, admin);
+        return new InMemoryUserDetailsManager(user, db, admin);
     }
 }
