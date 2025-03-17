@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.expression.WebExpressionAuthorizationManager;
 
 @Configuration
 @EnableWebSecurity
@@ -25,9 +26,10 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("user").hasRole("USER")
-                        .requestMatchers("db").hasRole("DB")
-                        .requestMatchers("admin").hasRole("ADMIN")
+                        .requestMatchers("/user").hasRole("USER")
+                        .requestMatchers("/db").access(new WebExpressionAuthorizationManager("hasRole('DB')"))
+                        .requestMatchers("/admin").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers("/secure").access(new CustomAuthorizationManager())
                         .anyRequest().authenticated())
                 .formLogin(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
@@ -35,14 +37,6 @@ public class SecurityConfig {
 
         return http.build();
     }
-
-    @Bean
-    public RoleHierarchy roleHierarchy() {
-        return RoleHierarchyImpl.fromHierarchy("ROLE_ADMIN > ROLE_DB\n" +
-                "ROLE_DB > ROLE_USER\n" +
-                "ROLE_USER > ROLE_ANONYMOUS");
-    }
-
 
     @Bean
     public UserDetailsService userDetailsService() {
