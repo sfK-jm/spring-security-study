@@ -26,4 +26,8 @@ public class HomeController {
         return "/admin";
     }
 
+    @GetMapping(value="/api")
+    public String restDashboard() {
+        return "/rest/dashboard";
+    }
 }
