@@ -1,5 +1,6 @@
 package io.security.springsecuritystudy.security.configs;
 
+import io.security.springsecuritystudy.security.dsl.RestApiDsl;
 import io.security.springsecuritystudy.security.entrypoint.RestAuthenticationEntryPoint;
 import io.security.springsecuritystudy.security.filters.RestAuthenticationFilter;
 import io.security.springsecuritystudy.security.handler.*;
@@ -77,21 +78,19 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
 //                .csrf(AbstractHttpConfigurer::disable)
-                .addFilterBefore(restAuthenticationFilter(http, authenticationManager), UsernamePasswordAuthenticationFilter.class)
                 .authenticationManager(authenticationManager)
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint(new RestAuthenticationEntryPoint())
                         .accessDeniedHandler(new RestAccessDeniedHandler())
-                );
+                )
+                .with(new RestApiDsl<>(), restDsl -> restDsl
+                        .restSuccessHandler(successHandler)
+                        .restFailureHandler(restFailureHandler)
+                        .loginPage("/api/login")
+                        .loginProcessingUrl("/api/login")
+
+                )
+        ;
         return http.build();
     }
-
-    private RestAuthenticationFilter restAuthenticationFilter(HttpSecurity http, AuthenticationManager authenticationManager) {
-        RestAuthenticationFilter restAuthenticationFilter = new RestAuthenticationFilter(http);
-        restAuthenticationFilter.setAuthenticationManager(authenticationManager);
-        restAuthenticationFilter.setAuthenticationSuccessHandler(restSuccessHandler);
-        restAuthenticationFilter.setAuthenticationFailureHandler(restFailureHandler);
-        return restAuthenticationFilter;
-    }
-
 }
