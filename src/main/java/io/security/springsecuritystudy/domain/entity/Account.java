@@ -1,23 +1,36 @@
 package io.security.springsecuritystudy.domain.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import lombok.Builder;
-import lombok.Data;
+import jakarta.persistence.*;
+import lombok.*;
 
-@Data
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
-public class Account {
+@Getter
+@Setter
+@ToString
+@Builder
+@AllArgsConstructor
+@RequiredArgsConstructor
+public class Account implements Serializable {
 
     @Id @GeneratedValue
     private Long id;
 
+    @Column
     private String username;
 
-    private String password;
-
+    @Column
     private int age;
 
-    private String roles;
+    @Column
+    private String password;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "account_roles", joinColumns = { @JoinColumn(name = "account_id") },
+            inverseJoinColumns = { @JoinColumn(name = "role_id") })
+    @ToString.Exclude
+    private Set<Role> userRoles = new HashSet<>();
 }

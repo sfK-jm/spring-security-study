@@ -5,15 +5,16 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class AccountDto {
-
     private String id;
     private String username;
-    private String password;
     private int age;
-    private String roles;
+    private String password;
+    private List<String> roles;
 }

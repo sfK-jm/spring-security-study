@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Dashboard</title>
@@ -89,8 +89,8 @@
                     console.error('Error during login:', error);
                 });
         }
-
         function logout() {
+
             fetch('/api/logout', {
                 method: 'GET',
                 headers: {
@@ -99,13 +99,13 @@
                 }
             })
                 .then(response => {
-                    if (response.ok) {
+                    if(response.ok){
                         window.location.replace('/api')
                     }
                 })
                 .catch(error => {
                     console.error('Error during login:', error);
-                })
+                });
         }
     </script>
 </head>

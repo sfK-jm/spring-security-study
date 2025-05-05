@@ -21,32 +21,26 @@ public class AccountContext implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles;
     }
-
     @Override
     public String getPassword() {
         return accountDto.getPassword();
     }
-
     @Override
     public String getUsername() {
         return accountDto.getUsername();
     }
-
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
-
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
-
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
-
     @Override
     public boolean isEnabled() {
         return true;

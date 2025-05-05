@@ -20,8 +20,8 @@ public class RestApiDsl <H extends HttpSecurityBuilder<H>> extends
     private AuthenticationSuccessHandler successHandler;
     private AuthenticationFailureHandler failureHandler;
 
-    public RestApiDsl() {
-        super(new RestAuthenticationFilter(), null);
+    public RestApiDsl(){
+        super(new RestAuthenticationFilter(),null);
     }
 
     @Override
@@ -41,7 +41,6 @@ public class RestApiDsl <H extends HttpSecurityBuilder<H>> extends
         if (sessionAuthenticationStrategy != null) {
             getAuthenticationFilter().setSessionAuthenticationStrategy(sessionAuthenticationStrategy);
         }
-
         RememberMeServices rememberMeServices = http.getSharedObject(RememberMeServices.class);
         if (rememberMeServices != null) {
             getAuthenticationFilter().setRememberMeServices(rememberMeServices);
@@ -62,10 +61,6 @@ public class RestApiDsl <H extends HttpSecurityBuilder<H>> extends
 
     public RestApiDsl<H> loginPage(String loginPage) {
         return super.loginPage(loginPage);
-    }
-
-    public RestApiDsl<H> setSecurityContextRepository(SecurityContextRepository securityContextRepository) {
-        return super.securityContextRepository(securityContextRepository);
     }
 
     @Override
