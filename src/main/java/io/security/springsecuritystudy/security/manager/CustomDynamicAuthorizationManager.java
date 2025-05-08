@@ -1,7 +1,6 @@
 package io.security.springsecuritystudy.security.manager;
 
 import io.security.springsecuritystudy.admin.repository.ResourcesRepository;
-import io.security.springsecuritystudy.security.mapper.MapBasedUrlRoleMapper;
 import io.security.springsecuritystudy.security.mapper.PersistentUrlRoleMapper;
 import io.security.springsecuritystudy.security.service.DynamicAuthorizationService;
 import jakarta.annotation.PostConstruct;
@@ -32,9 +31,17 @@ public class CustomDynamicAuthorizationManager implements AuthorizationManager<R
     private final HandlerMappingIntrospector handlerMappingIntrospector;
     private final ResourcesRepository resourcesRepository;
 
+    DynamicAuthorizationService dynamicAuthorizationService;
+
     @PostConstruct
     public void mapping() {
-        DynamicAuthorizationService dynamicAuthorizationService = new DynamicAuthorizationService(new PersistentUrlRoleMapper(resourcesRepository));
+        dynamicAuthorizationService =
+                new DynamicAuthorizationService(new PersistentUrlRoleMapper(resourcesRepository));
+
+        setMapping();
+    }
+
+    private void setMapping() {
         mappings = dynamicAuthorizationService.getUrlRoleMappings()
                 .entrySet().stream()
                 .map(entry -> new RequestMatcherEntry<>(
@@ -73,4 +80,8 @@ public class CustomDynamicAuthorizationManager implements AuthorizationManager<R
         }
     }
 
+    public synchronized void reload() {
+        mappings.clear();
+        setMapping();
+    }
 }
